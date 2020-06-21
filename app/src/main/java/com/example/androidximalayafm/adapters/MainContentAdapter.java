@@ -1,4 +1,30 @@
 package com.example.androidximalayafm.adapters;
 
-public class MainContentAdapter {
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentContainer;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.example.androidximalayafm.utils.FragmentCreator;
+
+public class MainContentAdapter extends FragmentPagerAdapter {
+    public MainContentAdapter(FragmentManager fm){
+        super(fm);
+    }
+    public MainContentAdapter(@NonNull FragmentManager fm, int behavior) {
+        super(fm, behavior);
+    }
+
+    @NonNull
+    @Override
+    public Fragment getItem(int position) {
+        return FragmentCreator.getFragment(position);
+    }
+
+    @Override
+    public int getCount() {
+        return FragmentCreator.PAGR_COUNT;
+    }
 }

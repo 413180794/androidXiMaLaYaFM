@@ -47,9 +47,12 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.14.2'
 // SDK联网框架使用okhttp
     implementation 'com.squareup.okio:okio:2.4.3'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
 // v4包
-//    implementation 'com.android.support:support-v4:28.0.0'
     testImplementation 'junit:junit:4.12'
+    implementation files('libs/TingPhoneOpenSDK_7.2.0.jar')
+    implementation files('libs/XmlyOAuth2SDK_V2.0.jar')
+    implementation 'com.github.hackware1993:MagicIndicator:1.5.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
