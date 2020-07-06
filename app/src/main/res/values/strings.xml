@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">androidXiMaLaYaFM</string>
-<!--    title-->
+    <string name="app_name">Himalaya</string>
+
+    <!--title-->
     <string-array name="indicator_title">
         <item>推荐</item>
         <item>订阅</item>

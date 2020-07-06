@@ -44,6 +44,7 @@ public class MainActivity extends FragmentActivity {
         // 创建indicator的适配器
         mIndicatorAdapter = new IndicatorAdapter(this);
         CommonNavigator commonNavigator = new CommonNavigator(this);
+        commonNavigator.setAdjustMode(true);
         commonNavigator.setAdapter(mIndicatorAdapter);
         // 设置要显示的内容
 
