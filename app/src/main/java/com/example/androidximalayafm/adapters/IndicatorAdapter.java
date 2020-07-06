@@ -17,6 +17,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.Simple
 public class IndicatorAdapter extends CommonNavigatorAdapter {
 
     private final String[] mTitles;
+    private OnIndicatorTapClickListener mOnTapClickListener;
 
     public IndicatorAdapter(Context context) {
         mTitles = context.getResources().getStringArray(R.array.indicator_title);
@@ -32,20 +33,23 @@ public class IndicatorAdapter extends CommonNavigatorAdapter {
 
     @Override
     public IPagerTitleView getTitleView(Context context, int index) {
-        // ´´½¨view
+        // åˆ›å»ºview
         ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
-        // ÉèÖÃÒ»°ãÑÕÉ«Îª»ÒÉ«
+        // è®¾ç½®ä¸€èˆ¬é¢œè‰²ä¸ºç°è‰²
         colorTransitionPagerTitleView.setNormalColor(Color.GRAY);
-        // ÉèÖÃÑ¡ÖĞÇé¿öÏÂÎªºÚÉ«
+        // è®¾ç½®é€‰ä¸­æƒ…å†µä¸‹ä¸ºé»‘è‰²
         colorTransitionPagerTitleView.setSelectedColor(Color.WHITE);
-        // µ¥Î»sp
+        // å•ä½sp
         colorTransitionPagerTitleView.setTextSize(18);
-        // ÉèÖÃÒªÏÔÊ¾µÄÄÚÈİ
+        // è®¾ç½®è¦æ˜¾ç¤ºçš„å†…å®¹
         colorTransitionPagerTitleView.setText(mTitles[index]);
-        // ÉèÖÃtitleµÄµã»÷ÊÂ¼ş£¬ÕâÀïµÄ»°£¬Èç¹ûµã»÷ÁËtitle£¬ÄÇÃ´¾Í»áÑ¡ÖĞÏÂÃæµÄviewPagerµ½¶ÔÓ¦µÄindexÀïÃæÈ¥
-        // Ò²¾ÍÊÇËµ£¬µ±ÎÒÃÇµã»÷ÁËtitleµÄÊ±ºò£¬ÏÂÃæµÄviewpager»á¶ÔÓ¦×Åindex½øĞĞÇĞ»»ÄÚÈİ
+        // è®¾ç½®titleçš„ç‚¹å‡»äº‹ä»¶ï¼Œè¿™é‡Œçš„è¯ï¼Œå¦‚æœç‚¹å‡»äº†titleï¼Œé‚£ä¹ˆå°±ä¼šé€‰ä¸­ä¸‹é¢çš„viewPageråˆ°å¯¹åº”çš„indexé‡Œé¢å»
+        // ä¹Ÿå°±æ˜¯è¯´ï¼Œå½“æˆ‘ä»¬ç‚¹å‡»äº†titleçš„æ—¶å€™ï¼Œä¸‹é¢çš„viewpagerä¼šå¯¹åº”ç€indexè¿›è¡Œåˆ‡æ¢å†…å®¹
         colorTransitionPagerTitleView.setOnClickListener(view -> {
-
+            // åˆ‡æ¢ viewPager çš„å†…å®¹ï¼Œå¦‚æœ index ä¸ä¸€æ ·çš„è¯
+            if (mOnTapClickListener != null) {
+                mOnTapClickListener.onTabClick(index);
+            }
         });
         return colorTransitionPagerTitleView;
     }
@@ -56,5 +60,13 @@ public class IndicatorAdapter extends CommonNavigatorAdapter {
         linePagerIndicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
         linePagerIndicator.setColors(Color.WHITE);
         return linePagerIndicator;
+    }
+
+    public void setOnIndicatorTapClickListener(OnIndicatorTapClickListener listener) {
+        this.mOnTapClickListener = listener;
+    }
+    // æš´éœ²æ¥å£
+    public interface OnIndicatorTapClickListener {
+        void onTabClick(int index);
     }
 }

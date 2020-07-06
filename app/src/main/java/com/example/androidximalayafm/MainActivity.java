@@ -1,47 +1,50 @@
 package com.example.androidximalayafm;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.androidximalayafm.adapters.IndicatorAdapter;
 import com.example.androidximalayafm.adapters.MainContentAdapter;
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
-import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
-import com.ximalaya.ting.android.opensdk.model.category.Category;
-import com.ximalaya.ting.android.opensdk.model.category.CategoryList;
+import com.example.androidximalayafm.utils.LogUtil;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends FragmentActivity {
 
     private static final String TAG = "MainActivity";
     private MagicIndicator mMagicIndicator;
     ViewPager mContentPager;
+    private IndicatorAdapter mIndicatorAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        initEvent();
+    }
 
+    private void initEvent() {
+        mIndicatorAdapter.setOnIndicatorTapClickListener(new IndicatorAdapter.OnIndicatorTapClickListener() {
+            @Override
+            public void onTabClick(int index) {
+                LogUtil.d(TAG,"click index is --> " + index);
+                mContentPager.setCurrentItem(index);
+            }
+        });
     }
 
     private void initView() {
         mMagicIndicator = this.findViewById(R.id.main_indicator);
         mMagicIndicator.setBackgroundColor(this.getResources().getColor(R.color.main_color));
         // 创建indicator的适配器
-        IndicatorAdapter adapter = new IndicatorAdapter(this);
+        mIndicatorAdapter = new IndicatorAdapter(this);
         CommonNavigator commonNavigator = new CommonNavigator(this);
-        commonNavigator.setAdapter(adapter);
+        commonNavigator.setAdapter(mIndicatorAdapter);
         // 设置要显示的内容
 
         // ViewPage
