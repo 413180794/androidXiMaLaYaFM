@@ -6,8 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.RequiresApi;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidximalayafm.R;
+import com.example.androidximalayafm.adapters.RecommendListAdapter;
 import com.example.androidximalayafm.base.BaseFragment;
 import com.example.androidximalayafm.utils.Constants;
 import com.example.androidximalayafm.utils.LogUtil;
@@ -24,14 +27,32 @@ import java.util.Optional;
 
 public class RecommendFragment  extends BaseFragment {
     private static final String TAG = "RecommendFragment";
+    private View mRootView;
+    private RecyclerView mRecommendRv;
+    private RecommendListAdapter mRecommendListAdapter;
 
     @Override
     protected View onSubViewLoaded(LayoutInflater layoutInflater, ViewGroup container) {
-        View rootView = layoutInflater.inflate(R.layout.fragment_recommend, container, false);
-        
-        
+        // View 加载完成
+        mRootView = layoutInflater.inflate(R.layout.fragment_recommend, container, false);
+        // 找到控件
+        mRecommendRv = mRootView.findViewById(R.id.recommend_list);
+        // 设置布局管理器
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecommendRv.setLayoutManager(linearLayoutManager);
+        // 设置适配器
+        mRecommendListAdapter = new RecommendListAdapter();
+        mRecommendRv.setAdapter(mRecommendListAdapter);
+        // 去拿数据回来
         getRecommendData();
-        return rootView;
+        // 返回 view 给界面显示
+        /**
+         * 1. 布局管理器的设置
+         * 2. 适配器的设置
+         * 3. 数据的设置
+         */
+        return mRootView;
     }
 
     /**
@@ -47,11 +68,10 @@ public class RecommendFragment  extends BaseFragment {
             @Override
             public void onSuccess(GussLikeAlbumList gussLikeAlbumList) {
                 // 数据获取成功
-                Optional.ofNullable(gussLikeAlbumList)
-                        .flatMap(s -> Optional.ofNullable(s.getAlbumList()))
-                        .ifPresent((albumList -> {
-                        LogUtil.d(TAG, "size --> " + albumList);
-                }));
+                if (gussLikeAlbumList != null) {
+                    List<Album> albums = gussLikeAlbumList.getAlbumList();
+                    updateRecommendUI(albums);
+                }
             }
 
             @Override
@@ -61,5 +81,11 @@ public class RecommendFragment  extends BaseFragment {
                 LogUtil.d(TAG, "errorMsg -- >" + s);
             }
         });
+    }
+
+    private void updateRecommendUI(List<Album> albumList) {
+        // 把数据设置给适配器，并且更新 UI
+        LogUtil.d(TAG, "update"+albumList);
+        mRecommendListAdapter.setData(albumList);
     }
 }

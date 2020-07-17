@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.androidximalayafm"
-        minSdkVersion 16
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -48,7 +48,10 @@ dependencies {
 // SDK联网框架使用okhttp
     implementation 'com.squareup.okio:okio:2.4.3'
     implementation 'androidx.viewpager:viewpager:1.0.0'
-// v4包
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'com.squareup.picasso:picasso:2.3.2'
+    // v4包
     testImplementation 'junit:junit:4.12'
     implementation files('libs/TingPhoneOpenSDK_7.2.0.jar')
     implementation files('libs/XmlyOAuth2SDK_V2.0.jar')
