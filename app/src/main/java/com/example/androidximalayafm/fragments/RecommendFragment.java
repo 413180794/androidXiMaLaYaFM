@@ -27,32 +27,24 @@ import java.util.Optional;
 
 public class RecommendFragment  extends BaseFragment {
     private static final String TAG = "RecommendFragment";
-    private View mRootView;
-    private RecyclerView mRecommendRv;
-    private RecommendListAdapter mRecommendListAdapter;
-
+    RecyclerView mRecyclerView;
+    RecommendListAdapter mRecommendListAdapter;
     @Override
     protected View onSubViewLoaded(LayoutInflater layoutInflater, ViewGroup container) {
         // View 加载完成
-        mRootView = layoutInflater.inflate(R.layout.fragment_recommend, container, false);
-        // 找到控件
-        mRecommendRv = mRootView.findViewById(R.id.recommend_list);
-        // 设置布局管理器
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_recommend, container, false);
+        // 获recycleview
+        mRecyclerView = view.findViewById(R.id.recommend_list);
+        // 加载布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecommendRv.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
         // 设置适配器
         mRecommendListAdapter = new RecommendListAdapter();
-        mRecommendRv.setAdapter(mRecommendListAdapter);
-        // 去拿数据回来
+        mRecyclerView.setAdapter(mRecommendListAdapter);
+        // 设置数据
         getRecommendData();
-        // 返回 view 给界面显示
-        /**
-         * 1. 布局管理器的设置
-         * 2. 适配器的设置
-         * 3. 数据的设置
-         */
-        return mRootView;
+        return view;
     }
 
     /**
@@ -60,17 +52,18 @@ public class RecommendFragment  extends BaseFragment {
      */
     private void getRecommendData() {
 
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         // 这个参数表示一夜数据返回多少条
-        map.put(DTransferConstants.LIKE_COUNT, Constants.RECOMMEND_COUNT +"");
+        map.put(DTransferConstants.LIKE_COUNT, Constants.RECOMMEND_COUNT + "");
         CommonRequest.getGuessLikeAlbum(map, new IDataCallBack<GussLikeAlbumList>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(GussLikeAlbumList gussLikeAlbumList) {
-                // 数据获取成功
                 if (gussLikeAlbumList != null) {
-                    List<Album> albums = gussLikeAlbumList.getAlbumList();
-                    updateRecommendUI(albums);
+                    List<Album> albumList = gussLikeAlbumList.getAlbumList();
+                    if (albumList != null) {
+                        setRecycleViewData(albumList);
+                    }
                 }
             }
 
@@ -83,9 +76,8 @@ public class RecommendFragment  extends BaseFragment {
         });
     }
 
-    private void updateRecommendUI(List<Album> albumList) {
-        // 把数据设置给适配器，并且更新 UI
-        LogUtil.d(TAG, "update"+albumList);
+    private void setRecycleViewData(List<Album> albumList) {
         mRecommendListAdapter.setData(albumList);
     }
+
 }
