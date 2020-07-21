@@ -1,10 +1,12 @@
 package com.example.androidximalayafm.fragments;
 
+import android.graphics.Rect;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,31 +22,43 @@ import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 import com.ximalaya.ting.android.opensdk.model.album.GussLikeAlbumList;
 
+import net.lucode.hackware.magicindicator.buildins.UIUtil;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class RecommendFragment  extends BaseFragment {
     private static final String TAG = "RecommendFragment";
-    RecyclerView mRecyclerView;
-    RecommendListAdapter mRecommendListAdapter;
+    private View mRootView;
+    private RecyclerView mRecommendRv;
+    private RecommendListAdapter mRecommendListAdapter;
     @Override
     protected View onSubViewLoaded(LayoutInflater layoutInflater, ViewGroup container) {
         // View 加载完成
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_recommend, container, false);
+        View mRootView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_recommend, container, false);
         // 获recycleview
-        mRecyclerView = view.findViewById(R.id.recommend_list);
+        mRecommendRv = mRootView.findViewById(R.id.recommend_list);
         // 加载布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecommendRv.setLayoutManager(linearLayoutManager);
+        mRecommendRv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.top = UIUtil.dip2px(view.getContext(), 5);
+                outRect.bottom = UIUtil.dip2px(view.getContext(), 5);
+                outRect.left = UIUtil.dip2px(view.getContext(), 5);
+                outRect.right = UIUtil.dip2px(view.getContext(), 5);
+
+            }
+        });
         // 设置适配器
         mRecommendListAdapter = new RecommendListAdapter();
-        mRecyclerView.setAdapter(mRecommendListAdapter);
+        mRecommendRv.setAdapter(mRecommendListAdapter);
         // 设置数据
         getRecommendData();
-        return view;
+        return mRootView;
     }
 
     /**
