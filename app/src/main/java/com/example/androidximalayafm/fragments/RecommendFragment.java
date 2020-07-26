@@ -2,6 +2,7 @@ package com.example.androidximalayafm.fragments;
 
 import android.graphics.Rect;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.androidximalayafm.interfaces.IRecommendViewCallback;
 import com.example.androidximalayafm.presenters.RecommendPresenter;
 import com.example.androidximalayafm.utils.Constants;
 import com.example.androidximalayafm.utils.LogUtil;
+import com.example.androidximalayafm.views.UILoader;
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
@@ -30,6 +32,7 @@ import net.lucode.hackware.magicindicator.buildins.UIUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RecommendFragment  extends BaseFragment implements IRecommendViewCallback {
     private static final String TAG = "RecommendFragment";
@@ -37,11 +40,33 @@ public class RecommendFragment  extends BaseFragment implements IRecommendViewCa
     private RecyclerView mRecommendRv;
     private RecommendListAdapter mRecommendListAdapter;
     private RecommendPresenter mRecommendPresenter;
+    private UILoader mUiLoader;
 
     @Override
     protected View onSubViewLoaded(LayoutInflater layoutInflater, ViewGroup container) {
+        mUiLoader = new UILoader(Objects.requireNonNull(getContext())) {
+            @Override
+            protected View getSuccessView(ViewGroup container) {
+                return createSuccessView(layoutInflater,container );
+            }
+        };
+
+        // 获取逻辑层的注册
+        mRecommendPresenter = RecommendPresenter.getInstance();
+        // 先要设置通知接口的注册
+        mRecommendPresenter.registerViewCallback(this);
+        // 获取推荐列表
+        mRecommendPresenter.getRecommendList();;
+        if (mUiLoader.getParent() instanceof ViewGroup) {
+            ((ViewGroup) mUiLoader.getParent()).removeView(mUiLoader);
+            
+        }
+        return mUiLoader;
+    }
+
+    private View createSuccessView(LayoutInflater layoutInflater, ViewGroup container) {
         // View 加载完成
-        View mRootView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_recommend, container, false);
+        mRootView =layoutInflater.inflate(R.layout.fragment_recommend, container, false);
         // 获recycleview
         mRecommendRv = mRootView.findViewById(R.id.recommend_list);
         // 加载布局管理器
@@ -61,12 +86,6 @@ public class RecommendFragment  extends BaseFragment implements IRecommendViewCa
         // 设置适配器
         mRecommendListAdapter = new RecommendListAdapter();
         mRecommendRv.setAdapter(mRecommendListAdapter);
-        // 获取逻辑层的注册
-        mRecommendPresenter = RecommendPresenter.getInstance();
-        // 先要设置通知接口的注册
-        mRecommendPresenter.registerViewCallback(this);
-        // 获取推荐列表
-        mRecommendPresenter.getRecommendList();;
         return mRootView;
     }
 
@@ -78,17 +97,26 @@ public class RecommendFragment  extends BaseFragment implements IRecommendViewCa
         Log.d(TAG, "更新 UI");
         Log.d(TAG, result.toString());
         mRecommendListAdapter.setData(result);
+        mUiLoader.updateStatus(UILoader.UIStatue.SUCCESS);
     }
 
     @Override
-    public void onLoaderMore(List<Album> result) {
-
+    public void onNetworkError() {
+        mUiLoader.updateStatus(UILoader.UIStatue.NETWORK_ERROR);
     }
 
     @Override
-    public void onRefreshMore(List<Album> result) {
+    public void onEmpty() {
 
+        mUiLoader.updateStatus(UILoader.UIStatue.EMPTY);
     }
+
+    @Override
+    public void onLoading() {
+
+        mUiLoader.updateStatus(UILoader.UIStatue.LOADING);
+    }
+
 
     @Override
     public void onDestroyView() {

@@ -1,12 +1,17 @@
 package com.example.androidximalayafm.base;
 
 import android.app.Application;
+import android.os.Handler;
 import android.util.Log;
 
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 
+import java.util.Optional;
+
+
 public class BaseApplication extends Application {
+    private static Handler sHandler = null;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -23,6 +28,9 @@ public class BaseApplication extends Application {
             mXimalaya.setPackid("com.ximalaya.qunfeng");
             mXimalaya.init(this ,mAppSecret);
         }
-
+        sHandler = new Handler();
+    }
+    public static Optional<Handler> getHandlerOptional() {
+        return Optional.of(sHandler);
     }
 }
