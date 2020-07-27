@@ -38,6 +38,7 @@ public class MainActivity extends FragmentActivity {
         });
     }
 
+    // 设置页面中心 fragment 与 indicator ，并且将其绑定
     private void initView() {
         mMagicIndicator = this.findViewById(R.id.main_indicator);
         mMagicIndicator.setBackgroundColor(this.getResources().getColor(R.color.main_color));

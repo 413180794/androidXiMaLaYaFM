@@ -54,7 +54,7 @@ public class RecommendFragment  extends BaseFragment implements IRecommendViewCa
 
         // 获取逻辑层的注册
         mRecommendPresenter = RecommendPresenter.getInstance();
-        // 先要设置通知接口的注册
+        // 先要设置通知接口的注册,可以看到所谓的注册callback 就是让对方实现接口，并且将其放入到数组中等待后续的调用
         mRecommendPresenter.registerViewCallback(this);
         // 获取推荐列表
         mRecommendPresenter.getRecommendList();;
@@ -62,6 +62,7 @@ public class RecommendFragment  extends BaseFragment implements IRecommendViewCa
             ((ViewGroup) mUiLoader.getParent()).removeView(mUiLoader);
             
         }
+        // 所谓的注册监听也是让对方实现接口
         mUiLoader.setOnRetryClickListener(this);
         return mUiLoader;
     }
