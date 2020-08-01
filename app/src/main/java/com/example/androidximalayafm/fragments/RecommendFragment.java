@@ -1,5 +1,6 @@
 package com.example.androidximalayafm.fragments;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.androidximalayafm.DetailActivity;
 import com.example.androidximalayafm.R;
 import com.example.androidximalayafm.adapters.RecommendListAdapter;
 import com.example.androidximalayafm.base.BaseFragment;
@@ -35,7 +37,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class RecommendFragment  extends BaseFragment implements IRecommendViewCallback, UILoader.OnRetryClickListener {
+public class RecommendFragment  extends BaseFragment implements IRecommendViewCallback, UILoader.OnRetryClickListener, RecommendListAdapter.OnRecommendItemClickListener {
     private static final String TAG = "RecommendFragment";
     private View mRootView;
     private RecyclerView mRecommendRv;
@@ -89,6 +91,7 @@ public class RecommendFragment  extends BaseFragment implements IRecommendViewCa
         // 设置适配器
         mRecommendListAdapter = new RecommendListAdapter();
         mRecommendRv.setAdapter(mRecommendListAdapter);
+        mRecommendListAdapter.setOnRecommendItemClickListener(this);
         return mRootView;
     }
 
@@ -135,5 +138,14 @@ public class RecommendFragment  extends BaseFragment implements IRecommendViewCa
         // 表示网络不佳的时候，用户点击了重试
         // 重新获取数据即可
         Optional.ofNullable(mRecommendPresenter).ifPresent(RecommendPresenter::getRecommendList);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        // item 被点击了, 跳转到详情
+        Intent intent = new Intent(getContext(), DetailActivity.class);
+        startActivity(intent);
+
+
     }
 }

@@ -12,21 +12,23 @@
         android:layout_height="40dp"
         android:background="@color/main_color"
         android:orientation="horizontal">
+
         <net.lucode.hackware.magicindicator.MagicIndicator
             android:id="@+id/main_indicator"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"/>
+            android:layout_weight="3" />
+
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
-<!--            为了实现垂直居中-->
+            <!--            为了实现垂直居中-->
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_centerInParent="true"
-                android:src="@mipmap/search_icon"/>
+                android:src="@mipmap/search_icon" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -34,6 +36,8 @@
         android:id="@+id/content_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never"
-        />
+        android:overScrollMode="never" />
+
+
+
 </LinearLayout>

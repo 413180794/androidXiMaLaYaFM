@@ -3,7 +3,6 @@ package com.example.androidximalayafm.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -19,19 +18,20 @@ import com.example.androidximalayafm.R;
  * <p>
  * Description:
  */
-public class LogindView  extends AppCompatImageView {
+public class LoadingView extends AppCompatImageView {
     // 旋转的角度
     private int rotateDegree = 0;
 
-    public LogindView(Context context) {
+    private boolean mNeedRotate = false;
+    public LoadingView(Context context) {
         this(context, null);
     }
 
-    public LogindView(Context context, AttributeSet attrs) {
+    public LoadingView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LogindView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LoadingView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         // 设置图标
         setImageResource(R.mipmap.loading);
@@ -41,13 +41,26 @@ public class LogindView  extends AppCompatImageView {
     protected void onAttachedToWindow() {
         // 绑定到 window 的时候
         super.onAttachedToWindow();
-        post()
+        mNeedRotate = true;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                rotateDegree +=  15;
+                rotateDegree = rotateDegree <= 360 ? rotateDegree: 15;
+                invalidate();
+                // 是否继续旋转
+                if (mNeedRotate) {
+                    postDelayed(this, 100);
+                }
+            }
+        });
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         // 从 window 解绑的时候
+        mNeedRotate = false;
     }
 
     @Override
