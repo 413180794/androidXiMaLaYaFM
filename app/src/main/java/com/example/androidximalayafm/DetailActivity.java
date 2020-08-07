@@ -1,6 +1,7 @@
 package com.example.androidximalayafm;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,7 +11,10 @@ import androidx.annotation.Nullable;
 
 import com.example.androidximalayafm.interfaces.IAlbumDetailViewCallback;
 import com.example.androidximalayafm.presenters.AlbumDetailPresenter;
+import com.example.androidximalayafm.utils.ImageBlur;
+import com.example.androidximalayafm.utils.LogUtil;
 import com.example.androidximalayafm.views.RoundRectImageView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
@@ -35,6 +39,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
     private TextView mAlbumTitle;
     private TextView mAlbumAuthor;
     private AlbumDetailPresenter mAlbumDetailPresenter;
+    private String TAG = "DetailActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,7 +75,20 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
             mAlbumAuthor.setText(album.getAnnouncer().getNickname());
         }
         if (mLargeCover != null) {
-            Picasso.with(this).load(album.getCoverUrlLarge()).into(mLargeCover);
+            Picasso.with(this).load(album.getCoverUrlLarge()).into(mLargeCover, new Callback() {
+                @Override
+                public void onSuccess() {
+                    Drawable drawable = mLargeCover.getDrawable();
+                    if (drawable != null) {
+                        ImageBlur.makeBlur(mLargeCover, DetailActivity.this);
+                    }
+                }
+
+                @Override
+                public void onError() {
+                    LogUtil.d(TAG, "onerror");
+                }
+            });
         }
         if (mSmallCover != null) {
 

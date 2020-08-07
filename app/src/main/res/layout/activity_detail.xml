@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0f0ff0">
+    android:background="#4d4d4d">
 
 
     <ImageView
@@ -11,12 +11,31 @@
         android:layout_height="150dp"
         android:scaleType="fitXY"
         />
+    <RelativeLayout
+        android:layout_below="@+id/iv_large_cover"
+        android:layout_width="match_parent"
+        android:background="#ffffff"
+        android:layout_height="50dp">
+        <TextView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/shape_subscription_bg"
+            android:gravity="center"
+            android:text="+订阅"/>
+
+
+
+    </RelativeLayout>
     <com.example.androidximalayafm.views.RoundRectImageView
         android:layout_width="75dp"
         android:layout_below="@+id/iv_large_cover"
         android:id="@+id/viv_small_cover"
         android:scaleType="fitXY"
-        android:layout_marginTop="-45dp"
+        android:layout_marginTop="-40dp"
         android:layout_marginLeft="10dp"
         android:layout_height="75dp"
        />
@@ -35,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:textColor="#ffffff"
+            android:textColor="@color/white"
             android:text="这是标题"/>
         <TextView
             android:id="@+id/tv_ablum_author"
@@ -43,7 +62,8 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:layout_marginTop="5dp"
-            android:textColor="#ffffff"
+            android:textColor="@color/sub_text_title"
             android:text="这是作者信息"/>
     </LinearLayout>
+
 </RelativeLayout>
