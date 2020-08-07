@@ -27,7 +27,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     @NonNull
     @Override
     public InnerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recommend,parent,false);
+        mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recommend, parent, false);
         return new InnerHolder(mView);
 
     }
@@ -39,9 +39,10 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick((Integer) v.getTag());
+                    int clickPosition = (int) v.getTag();
+                    mItemClickListener.onItemClick(clickPosition, albumList.get(clickPosition));
                 }
-                Log.d(TAG, "holder.itemView click --- >"+v.getTag());
+                Log.d(TAG, "holder.itemView click --- >" + v.getTag());
             }
         });
         holder.setData(albumList.get(position));
@@ -75,8 +76,8 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
             TextView albumDescTv = itemView.findViewById(R.id.album_description_tv);
             TextView albumTitleTv = itemView.findViewById(R.id.album_title_tv);
 
-            albumPlayCount.setText(album.getPlayCount()+"");
-            albumContentSize.setText(album.getIncludeTrackCount()+"");
+            albumPlayCount.setText(album.getPlayCount() + "");
+            albumContentSize.setText(album.getIncludeTrackCount() + "");
             albumDescTv.setText(album.getAlbumIntro());
             albumTitleTv.setText(album.getAlbumTitle());
             Picasso.with(itemView.getContext()).load(album.getCoverUrlLarge()).into(imageView);
@@ -88,6 +89,6 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     }
 
     public interface OnRecommendItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position, Album album);
     }
 }

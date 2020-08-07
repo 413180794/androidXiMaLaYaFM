@@ -1,5 +1,10 @@
 package com.example.androidximalayafm.interfaces;
 
+import com.ximalaya.ting.android.opensdk.model.album.Album;
+import com.ximalaya.ting.android.opensdk.model.track.Track;
+
+import java.util.List;
+
 /**
  * IAlbumDetailViewCallback
  *
@@ -10,5 +15,18 @@ package com.example.androidximalayafm.interfaces;
  * <p>
  * Description:
  */
-public class IAlbumDetailViewCallback {
+
+
+public interface IAlbumDetailViewCallback {
+    /**
+     * 专辑详情内容加载出来
+     * @param tracks
+     */
+    void onDetailListLoaded(List<Track> tracks);
+
+    /**
+     * 把 album 传给 ui
+     * @param album
+     */
+    void onAlbumLoaded(Album album);
 }

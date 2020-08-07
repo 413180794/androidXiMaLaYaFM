@@ -2,15 +2,12 @@ package com.example.androidximalayafm.fragments;
 
 import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,21 +16,14 @@ import com.example.androidximalayafm.R;
 import com.example.androidximalayafm.adapters.RecommendListAdapter;
 import com.example.androidximalayafm.base.BaseFragment;
 import com.example.androidximalayafm.interfaces.IRecommendViewCallback;
+import com.example.androidximalayafm.presenters.AlbumDetailPresenter;
 import com.example.androidximalayafm.presenters.RecommendPresenter;
-import com.example.androidximalayafm.utils.Constants;
-import com.example.androidximalayafm.utils.LogUtil;
 import com.example.androidximalayafm.views.UILoader;
-import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
-import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
-import com.ximalaya.ting.android.opensdk.model.album.GussLikeAlbumList;
 
 import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -141,7 +131,9 @@ public class RecommendFragment  extends BaseFragment implements IRecommendViewCa
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(int position, Album album) {
+        AlbumDetailPresenter.getInstance().setTargetAlbum(album);
+        // 根据位置拿到 数据
         // item 被点击了, 跳转到详情
         Intent intent = new Intent(getContext(), DetailActivity.class);
         startActivity(intent);
