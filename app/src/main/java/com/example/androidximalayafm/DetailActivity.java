@@ -40,6 +40,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
     private TextView mAlbumAuthor;
     private AlbumDetailPresenter mAlbumDetailPresenter;
     private String TAG = "DetailActivity";
+    private int mCurrentPage = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +51,9 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
         initView();
         mAlbumDetailPresenter = AlbumDetailPresenter.getInstance();
         mAlbumDetailPresenter.registerViewCallback(this);
+
+
+        // 获取专辑的详情内容
     }
 
     private void initView() {
@@ -68,6 +72,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
 
     @Override
     public void onAlbumLoaded(Album album) {
+        mAlbumDetailPresenter.getAlbumDetail((int) album.getId(), mCurrentPage);
         if (mAlbumTitle != null) {
             mAlbumTitle.setText(album.getAlbumTitle());
         }
