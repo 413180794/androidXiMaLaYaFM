@@ -3,13 +3,16 @@ package com.example.androidximalayafm.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidximalayafm.R;
+import com.example.androidximalayafm.utils.LogUtil;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,16 +28,20 @@ import java.util.List;
  */
 public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.InnerHolder> {
     private List<Track> mDetailData = new ArrayList<>();
+    // 格式化时间
+    private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat durationFormat = new SimpleDateFormat("mm:ss");
     @NonNull
     @Override
     public InnerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView =LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_detail, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_detail, parent, false);
         return new InnerHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull InnerHolder holder, int position) {
-
+        holder.itemView.setTag(position);
+        holder.setData(mDetailData.get(position));
     }
 
     @Override
@@ -54,6 +61,23 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     public class InnerHolder extends RecyclerView.ViewHolder {
         public InnerHolder(@NonNull View itemView) {
             super(itemView);
+        }
+
+        public void setData(Track track) {
+            TextView orderText = itemView.findViewById(R.id.order_text);
+            TextView detailTitle=  itemView.findViewById(R.id.detail_title);
+            TextView amountOfPlay = itemView.findViewById(R.id.amount_of_play);
+            TextView detailTime = itemView.findViewById(R.id.detail_time);
+            TextView detailDate = itemView.findViewById(R.id.detail_date);
+
+            orderText.setText((Integer) itemView.getTag()+"");
+            detailTitle.setText(track.getTrackTitle());
+            amountOfPlay.setText(track.getPlayCount()+"");
+            int durationMI = track.getDuration()*1000;
+            detailTime.setText(durationFormat.format(durationMI)+"");
+            String updateTimeText = mSimpleDateFormat.format(track.getUpdatedAt());
+            detailDate.setText(updateTimeText);
+
         }
     }
 }

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#4d4d4d">
+    android:layout_height="match_parent">
 
 
     <ImageView
@@ -114,6 +113,7 @@
         android:id="@+id/album_detail_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:layout_below="@id/player_control_container">
 
     </androidx.recyclerview.widget.RecyclerView>
