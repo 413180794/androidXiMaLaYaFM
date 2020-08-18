@@ -10,6 +10,7 @@ import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 import com.ximalaya.ting.android.opensdk.model.track.CommonTrackList;
+import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.model.track.TrackList;
 
 import java.util.ArrayList;
@@ -73,8 +74,12 @@ public class AlbumDetailPresenter implements IAlbumDetailPresenter {
         CommonRequest.getTracks(map, new IDataCallBack<TrackList>() {
             @Override
             public void onSuccess(@Nullable TrackList trackList) {
+                // 将 trace的数据显示在 recycleView 上，分别是序号、集数、traceTitle、时间、播放数
+                // 这一部分的显示自己写
+                LogUtil.d(TAG, "current Thread -- > " + Thread.currentThread().getName());
                 Optional.ofNullable(trackList).ifPresent(i -> {
                     LogUtil.d(TAG, "tracks size --> " + i.getTracks().size());
+                    handlerAlbumDetailResult(i.getTracks());
                 });
             }
 
@@ -83,6 +88,12 @@ public class AlbumDetailPresenter implements IAlbumDetailPresenter {
                 LogUtil.d(TAG, "errorCode --> " + errorCode);
                 LogUtil.d(TAG, "errorMsg --> " + errorMsg);
             }
+        });
+    }
+
+    private void handlerAlbumDetailResult(List<Track> tracks) {
+        mCallbacks.forEach(mCallback->{
+            mCallback.onDetailListLoaded(tracks);
         });
     }
 
