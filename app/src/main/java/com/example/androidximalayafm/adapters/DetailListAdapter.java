@@ -16,6 +16,7 @@ import com.ximalaya.ting.android.opensdk.model.track.Track;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * DetailListAdapter
@@ -32,6 +33,8 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     // 格式化时间
     private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat durationFormat = new SimpleDateFormat("mm:ss");
+    private ItemClickListener itemClickListener = null;
+
     @NonNull
     @Override
     public InnerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -66,22 +69,31 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
 
         public void setData(Track track) {
             TextView orderText = itemView.findViewById(R.id.order_text);
-            TextView detailTitle=  itemView.findViewById(R.id.detail_title);
+            TextView detailTitle = itemView.findViewById(R.id.detail_title);
             TextView amountOfPlay = itemView.findViewById(R.id.amount_of_play);
             TextView detailTime = itemView.findViewById(R.id.detail_time);
             TextView detailDate = itemView.findViewById(R.id.detail_date);
 
-            orderText.setText((Integer) itemView.getTag()+"");
+            orderText.setText((Integer) itemView.getTag() + "");
             detailTitle.setText(track.getTrackTitle());
-            amountOfPlay.setText(track.getPlayCount()+"");
-            int durationMI = track.getDuration()*1000;
-            detailTime.setText(durationFormat.format(durationMI)+"");
+            amountOfPlay.setText(track.getPlayCount() + "");
+            int durationMI = track.getDuration() * 1000;
+            detailTime.setText(durationFormat.format(durationMI) + "");
             String updateTimeText = mSimpleDateFormat.format(track.getUpdatedAt());
             detailDate.setText(updateTimeText);
 
             itemView.setOnClickListener(v -> {
                 Toast.makeText(itemView.getContext(), "", Toast.LENGTH_SHORT).show();
+                Optional.ofNullable(itemClickListener).ifPresent(ItemClickListener::onItemClick);
             });
         }
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public interface ItemClickListener {
+        void onItemClick();
     }
 }

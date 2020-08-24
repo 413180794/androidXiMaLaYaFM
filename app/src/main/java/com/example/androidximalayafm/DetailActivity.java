@@ -1,5 +1,6 @@
 package com.example.androidximalayafm;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -44,7 +45,7 @@ import java.util.Optional;
  * <p>
  * Description:
  */
-public class DetailActivity extends BaseActivity implements IAlbumDetailViewCallback, UILoader.OnRetryClickListener {
+public class DetailActivity extends BaseActivity implements IAlbumDetailViewCallback, UILoader.OnRetryClickListener, DetailListAdapter.ItemClickListener {
 
 
     private RoundRectImageView mSmallCover;
@@ -114,6 +115,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
                 outRect.right = UIUtil.dip2px(view.getContext(), 2);
             }
         });
+        mDetailListAdapter.setItemClickListener(this);
         return detailListView;
     }
 
@@ -169,5 +171,12 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
        Optional.ofNullable(mAlbumDetailPresenter).ifPresent(albumDetailPresenter -> {
            albumDetailPresenter.getAlbumDetail(mCurrentAlbumId, mCurrentPage);
        });
+    }
+
+    @Override
+    public void onItemClick() {
+        // TODO : 跳转到播放器界面
+        Intent intent = new Intent(this, PlayerActivity.class);
+        startActivity(intent);
     }
 }
