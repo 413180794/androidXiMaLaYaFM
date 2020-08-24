@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -78,6 +79,9 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
             String updateTimeText = mSimpleDateFormat.format(track.getUpdatedAt());
             detailDate.setText(updateTimeText);
 
+            itemView.setOnClickListener(v -> {
+                Toast.makeText(itemView.getContext(), "", Toast.LENGTH_SHORT).show();
+            });
         }
     }
 }
