@@ -1,5 +1,7 @@
 package com.example.androidximalayafm.interfaces;
 
+import com.example.androidximalayafm.base.IBasePresenter;
+
 /**
  * IAlbumDetailPresenter
  *
@@ -10,7 +12,7 @@ package com.example.androidximalayafm.interfaces;
  * <p>
  * Description:
  */
-public interface IAlbumDetailPresenter {
+public interface IAlbumDetailPresenter extends IBasePresenter<IAlbumDetailViewCallback> {
     /**
      * 下拉刷新更多内容
      */
@@ -24,17 +26,9 @@ public interface IAlbumDetailPresenter {
 
     /**
      * 获取专辑详情
+     *
      * @param albumId
      * @param page
      */
     void getAlbumDetail(int albumId, int page);
-
-    /**
-     * 注册 UI 通知接口
-     * @param detailPresenter
-     */
-    void registerViewCallback(IAlbumDetailViewCallback albumDetailViewCallback);
-
-
-    void unRegisterViewCallback(IAlbumDetailViewCallback albumDetailViewCallback);
 }
