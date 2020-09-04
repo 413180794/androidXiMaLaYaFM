@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidximalayafm.adapters.DetailListAdapter;
 import com.example.androidximalayafm.interfaces.IAlbumDetailViewCallback;
 import com.example.androidximalayafm.presenters.AlbumDetailPresenter;
+import com.example.androidximalayafm.presenters.PlayerPresenter;
 import com.example.androidximalayafm.utils.ImageBlur;
 import com.example.androidximalayafm.utils.LogUtil;
 import com.example.androidximalayafm.views.RoundRectImageView;
@@ -31,7 +32,6 @@ import com.ximalaya.ting.android.opensdk.model.track.Track;
 
 import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -174,7 +174,10 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
     }
 
     @Override
-    public void onItemClick() {
+    public void onItemClick(List<Track> detailData, int position) {
+        // 设置播放器的数据
+        PlayerPresenter playerPresenter = PlayerPresenter.getInstance();
+        playerPresenter.setPlayList(detailData, position);
         // TODO : 跳转到播放器界面
         Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);

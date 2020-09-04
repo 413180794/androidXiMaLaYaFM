@@ -45,7 +45,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     @Override
     public void onBindViewHolder(@NonNull InnerHolder holder, int position) {
         holder.itemView.setTag(position);
-        holder.setData(mDetailData.get(position));
+        holder.setData(mDetailData, position);
     }
 
     @Override
@@ -67,7 +67,8 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
             super(itemView);
         }
 
-        public void setData(Track track) {
+        public void setData(List<Track> detailData, int position) {
+            Track track = detailData.get(position);
             TextView orderText = itemView.findViewById(R.id.order_text);
             TextView detailTitle = itemView.findViewById(R.id.detail_title);
             TextView amountOfPlay = itemView.findViewById(R.id.amount_of_play);
@@ -84,9 +85,14 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
 
             itemView.setOnClickListener(v -> {
                 Toast.makeText(itemView.getContext(), "", Toast.LENGTH_SHORT).show();
-                Optional.ofNullable(itemClickListener).ifPresent(ItemClickListener::onItemClick);
+                Optional.ofNullable(itemClickListener).ifPresent(i-> this.accept(i, position));
             });
         }
+
+        private void accept(ItemClickListener i, int position) {
+            i.onItemClick(mDetailData, position);
+        }
+
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -94,6 +100,6 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     }
 
     public interface ItemClickListener {
-        void onItemClick();
+        void onItemClick(List<Track> detailData, int position);
     }
 }

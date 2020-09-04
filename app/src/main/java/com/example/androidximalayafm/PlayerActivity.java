@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+import com.example.androidximalayafm.presenters.PlayerPresenter;
+
 /**
  * PlayerActivity
  *
@@ -19,5 +21,9 @@ public class PlayerActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+        // TODO: 测试一下播放
+        PlayerPresenter playerPresenter = PlayerPresenter.getInstance();
+        playerPresenter.play();
     }
+
 }
