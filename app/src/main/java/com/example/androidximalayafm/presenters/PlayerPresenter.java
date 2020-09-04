@@ -4,13 +4,17 @@ import com.example.androidximalayafm.base.BaseApplication;
 import com.example.androidximalayafm.interfaces.IPlayerCallback;
 import com.example.androidximalayafm.interfaces.IPlayerPresenter;
 import com.example.androidximalayafm.utils.LogUtil;
+import com.ximalaya.ting.android.opensdk.model.PlayableModel;
 import com.ximalaya.ting.android.opensdk.model.advertis.Advertis;
 import com.ximalaya.ting.android.opensdk.model.advertis.AdvertisList;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager;
 import com.ximalaya.ting.android.opensdk.player.advertis.IXmAdsStatusListener;
+import com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
+import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException;
 
+import java.lang.annotation.Target;
 import java.util.List;
 
 /**
@@ -23,14 +27,18 @@ import java.util.List;
  * <p>
  * Description:
  */
-public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener {
+public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, IXmPlayerStatusListener {
 
     private static final String TAG = "PlayerPresenter";
     private XmPlayerManager mPlayerManager;
 
     private PlayerPresenter() {
         mPlayerManager = XmPlayerManager.getInstance(BaseApplication.getAppContext());
+        // 广告相关的接口
         mPlayerManager.addAdsStatusListener(this);
+        // 注册播放器状态相关的接口
+        mPlayerManager.addPlayerStatusListener(this);
+
     }
 
     /*=================广告相关的回调方法===================*/
@@ -74,8 +82,76 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener {
 
         LogUtil.d(TAG, " onError what =>" + what + " extra => " + extra);
     }
+
+
     /*=================广告相关的回调方法===================*/
 
+    // ----------------播放器状态相关的回调方法---------------
+    @Override
+    public void onPlayStart() {
+        LogUtil.d(TAG, "onPlayStart");
+    }
+
+    @Override
+    public void onPlayPause() {
+        LogUtil.d(TAG, "");
+    }
+
+    @Override
+    public void onPlayStop() {
+
+        LogUtil.d(TAG, "");
+    }
+
+    @Override
+    public void onSoundPlayComplete() {
+
+        LogUtil.d(TAG, "");
+    }
+
+    @Override
+    public void onSoundPrepared() {
+
+        LogUtil.d(TAG, "");
+    }
+
+    @Override
+    public void onSoundSwitch(PlayableModel playableModel, PlayableModel playableModel1) {
+
+        LogUtil.d(TAG, "");
+    }
+
+    @Override
+    public void onBufferingStart() {
+
+        LogUtil.d(TAG, "");
+    }
+
+    @Override
+    public void onBufferingStop() {
+
+        LogUtil.d(TAG, "");
+    }
+
+    @Override
+    public void onBufferProgress(int i) {
+
+        LogUtil.d(TAG, "");
+    }
+
+    @Override
+    public void onPlayProgress(int i, int i1) {
+
+        LogUtil.d(TAG, "");
+    }
+
+    @Override
+    public boolean onError(XmPlayerException e) {
+        LogUtil.d(TAG, "");
+        return false;
+    }
+
+    // ----------------播放器状态相关的回调方法---------------
     private static class PlayPresenterHolder {
         private static PlayerPresenter INSTANCE = new PlayerPresenter();
     }
