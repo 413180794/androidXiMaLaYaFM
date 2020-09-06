@@ -15,7 +15,9 @@ import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException;
 
 import java.lang.annotation.Target;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * PlayPresenter
@@ -29,15 +31,16 @@ import java.util.List;
  */
 public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, IXmPlayerStatusListener {
 
+    private List<IPlayerCallback> mIPlayerCallbacks = new ArrayList<>();
     private static final String TAG = "PlayerPresenter";
-    private XmPlayerManager mPlayerManager;
+    private Optional<XmPlayerManager> mOptionalXmPlayerManager;
 
     private PlayerPresenter() {
-        mPlayerManager = XmPlayerManager.getInstance(BaseApplication.getAppContext());
+        mOptionalXmPlayerManager = Optional.ofNullable(XmPlayerManager.getInstance(BaseApplication.getAppContext()));
         // 广告相关的接口
-        mPlayerManager.addAdsStatusListener(this);
+        mOptionalXmPlayerManager.ifPresent(i -> i.addAdsStatusListener(this));
         // 注册播放器状态相关的接口
-        mPlayerManager.addPlayerStatusListener(this);
+        mOptionalXmPlayerManager.ifPresent(i -> i.addPlayerStatusListener(this));
 
     }
 
@@ -90,17 +93,21 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     @Override
     public void onPlayStart() {
         LogUtil.d(TAG, "onPlayStart");
+        mIPlayerCallbacks.forEach(IPlayerCallback::onPlayStart);
     }
 
     @Override
     public void onPlayPause() {
         LogUtil.d(TAG, "");
+
+        mIPlayerCallbacks.forEach(IPlayerCallback::onPlayPause);
     }
 
     @Override
     public void onPlayStop() {
 
         LogUtil.d(TAG, "");
+        mIPlayerCallbacks.forEach(IPlayerCallback::onPlayStop);
     }
 
     @Override
@@ -157,12 +164,14 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     }
 
     private boolean isPlayListSet = false;
+
     public void setPlayList(List<Track> list, int playIndex) {
 
-        if (mPlayerManager != null) {
-            mPlayerManager.setPlayList(list,playIndex);
+        mOptionalXmPlayerManager.ifPresent(i -> {
+            i.setPlayList(list, playIndex);
             isPlayListSet = true;
-        } else {
+        });
+        if (!mOptionalXmPlayerManager.isPresent()) {
             LogUtil.d(TAG, "mPlayerManager is null");
         }
     }
@@ -174,28 +183,29 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     @Override
     public void play() {
         if (isPlayListSet) {
-            mPlayerManager.play();
+            mOptionalXmPlayerManager.ifPresent(XmPlayerManager::play);
         }
+
     }
 
     @Override
     public void pause() {
-
+        mOptionalXmPlayerManager.ifPresent(XmPlayerManager::pause);
     }
 
     @Override
     public void stop() {
-
+        mOptionalXmPlayerManager.ifPresent(XmPlayerManager::stop);
     }
 
     @Override
     public void playPre() {
-
+        mOptionalXmPlayerManager.ifPresent(XmPlayerManager::playPre);
     }
 
     @Override
     public void playNext() {
-
+        mOptionalXmPlayerManager.ifPresent(XmPlayerManager::playNext);
     }
 
     @Override
@@ -219,8 +229,16 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     }
 
     @Override
-    public void registerViewCallback(IPlayerCallback iPlayerCallback) {
+    public boolean isPlay() {
+        // 返回当前是否正在播放
+       return mOptionalXmPlayerManager.map(XmPlayerManager::isPlaying).orElse(Boolean.FALSE);
+    }
 
+    @Override
+    public void registerViewCallback(IPlayerCallback iPlayerCallback) {
+        if (!mIPlayerCallbacks.contains(iPlayerCallback)) {
+            mIPlayerCallbacks.add(iPlayerCallback);
+        }
     }
 
     @Override
