@@ -1,8 +1,8 @@
 package com.example.androidximalayafm;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -11,6 +11,7 @@ import com.example.androidximalayafm.presenters.PlayerPresenter;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,10 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
 
     private Optional<ImageView> mOptionalControlBtn;
     private Optional<PlayerPresenter> mOptionalPlayerPresenter;
+    private SimpleDateFormat mMinFormat = new SimpleDateFormat("mm:ss");
+    private SimpleDateFormat mHourFormat = new SimpleDateFormat("hh:mm:ss");
+    private Optional<TextView> mOptionalTotalDuration;
+    private Optional<TextView> mOptionalCurrentPosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +85,9 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
      */
     private void initView() {
         mOptionalControlBtn = Optional.ofNullable(this.findViewById(R.id.play_or_pause_btn));
+        mOptionalTotalDuration = Optional.ofNullable(this.findViewById(R.id.track_duration));
+        mOptionalCurrentPosition = Optional.ofNullable(this.findViewById(R.id.current_position));
+
     }
 
     @Override
@@ -124,9 +132,22 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
     }
 
     @Override
-    public void onProgressChange(Long currentProgress, long totalProgress) {
+    public void onProgressChange(long currentProgress, long totalProgress) {
+        // 更新播放进度，更新进度条
+        String totalDuration;
+        String currentPosition;
+        if (totalProgress > 1000 * 60 * 60) {
+            totalDuration = mHourFormat.format(totalProgress);
+            currentPosition = mHourFormat.format(currentProgress);
+        } else {
+            totalDuration = mMinFormat.format(totalProgress);
+            currentPosition = mMinFormat.format(currentProgress);
+        }
+        mOptionalTotalDuration.ifPresent(t->t.setText(totalDuration));
+        mOptionalCurrentPosition.ifPresent(c->c.setText(currentPosition));
 
     }
+
 
     @Override
     public void onAdLoading() {

@@ -56,7 +56,7 @@ public interface IPlayerCallback{
     void onPlayModeChange(XmPlayListControl.PlayMode playMode);
 
     // 进度条的改变
-    void onProgressChange(Long currentProgress, long totalProgress);
+    void onProgressChange(long currentProgress, long totalProgress);
 
     // 广告正在加载
     void onAdLoading();
