@@ -1,0 +1,294 @@
+@startuml
+
+title __APP's Class Diagram__\n
+
+  namespace com.example.androidximalayafm {
+    class com.example.androidximalayafm.BaseActivity {
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    class com.example.androidximalayafm.BuildConfig {
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    class com.example.androidximalayafm.DetailActivity {
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    class com.example.androidximalayafm.MainActivity {
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    class com.example.androidximalayafm.PlayerActivity {
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace adapters {
+      class com.example.androidximalayafm.adapters.DetailListAdapter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace adapters {
+      class com.example.androidximalayafm.adapters.IndicatorAdapter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace adapters {
+      class com.example.androidximalayafm.adapters.MainContentAdapter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace adapters {
+      class com.example.androidximalayafm.adapters.RecommendListAdapter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace base {
+      class com.example.androidximalayafm.base.BaseApplication {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace base {
+      abstract class com.example.androidximalayafm.base.BaseFragment {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace base {
+      interface com.example.androidximalayafm.base.IBasePresenter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace fragments {
+      class com.example.androidximalayafm.fragments.HistoryFragment {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace fragments {
+      class com.example.androidximalayafm.fragments.RecommendFragment {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace fragments {
+      class com.example.androidximalayafm.fragments.SubscriptionFragment {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace interfaces {
+      interface com.example.androidximalayafm.interfaces.IAlbumDetailPresenter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace interfaces {
+      interface com.example.androidximalayafm.interfaces.IAlbumDetailViewCallback {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace interfaces {
+      interface com.example.androidximalayafm.interfaces.IPlayerCallback {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace interfaces {
+      interface com.example.androidximalayafm.interfaces.IPlayerPresenter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace interfaces {
+      interface com.example.androidximalayafm.interfaces.IRecommendPresenter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace interfaces {
+      interface com.example.androidximalayafm.interfaces.IRecommendViewCallback {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace presenters {
+      class com.example.androidximalayafm.presenters.AlbumDetailPresenter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace presenters {
+      class com.example.androidximalayafm.presenters.PlayerPresenter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace presenters {
+      class com.example.androidximalayafm.presenters.RecommendPresenter {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace utils {
+      class com.example.androidximalayafm.utils.Constants {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace utils {
+      class com.example.androidximalayafm.utils.FragmentCreator {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace utils {
+      class com.example.androidximalayafm.utils.ImageBlur {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace utils {
+      class com.example.androidximalayafm.utils.LogUtil {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace views {
+      class com.example.androidximalayafm.views.LoadingView {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace views {
+      class com.example.androidximalayafm.views.RoundRectImageView {
+      }
+    }
+  }
+  
+
+  namespace com.example.androidximalayafm {
+    namespace views {
+      abstract class com.example.androidximalayafm.views.UILoader {
+      }
+    }
+  }
+  
+
+  com.example.androidximalayafm.BaseActivity -up-|> androidx.fragment.app.FragmentActivity
+  com.example.androidximalayafm.DetailActivity .up.|> com.example.androidximalayafm.adapters.DetailListAdapter.ItemClickListener
+  com.example.androidximalayafm.DetailActivity .up.|> com.example.androidximalayafm.interfaces.IAlbumDetailViewCallback
+  com.example.androidximalayafm.DetailActivity .up.|> com.example.androidximalayafm.views.UILoader.OnRetryClickListener
+  com.example.androidximalayafm.DetailActivity -up-|> com.example.androidximalayafm.BaseActivity
+  com.example.androidximalayafm.DetailActivity o-- com.example.androidximalayafm.presenters.AlbumDetailPresenter : mAlbumDetailPresenter
+  com.example.androidximalayafm.DetailActivity o-- com.example.androidximalayafm.adapters.DetailListAdapter : mDetailListAdapter
+  com.example.androidximalayafm.DetailActivity o-- com.example.androidximalayafm.views.RoundRectImageView : mSmallCover
+  com.example.androidximalayafm.DetailActivity o-- com.example.androidximalayafm.views.UILoader : mUiLoader
+  com.example.androidximalayafm.MainActivity -up-|> androidx.fragment.app.FragmentActivity
+  com.example.androidximalayafm.MainActivity o-- com.example.androidximalayafm.adapters.IndicatorAdapter : mIndicatorAdapter
+  com.example.androidximalayafm.PlayerActivity .up.|> com.example.androidximalayafm.interfaces.IPlayerCallback
+  com.example.androidximalayafm.PlayerActivity -up-|> com.example.androidximalayafm.BaseActivity
+  com.example.androidximalayafm.PlayerActivity o-- com.example.androidximalayafm.presenters.PlayerPresenter : mPlayerPresenter
+  com.example.androidximalayafm.adapters.DetailListAdapter -up-|> androidx.recyclerview.widget.RecyclerView.Adapter
+  com.example.androidximalayafm.adapters.DetailListAdapter o-- com.example.androidximalayafm.adapters.DetailListAdapter.ItemClickListener : itemClickListener
+  com.example.androidximalayafm.adapters.IndicatorAdapter -up-|> net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
+  com.example.androidximalayafm.adapters.IndicatorAdapter o-- com.example.androidximalayafm.adapters.IndicatorAdapter.OnIndicatorTapClickListener : mOnTapClickListener
+  com.example.androidximalayafm.adapters.MainContentAdapter -up-|> androidx.fragment.app.FragmentPagerAdapter
+  com.example.androidximalayafm.adapters.RecommendListAdapter -up-|> androidx.recyclerview.widget.RecyclerView.Adapter
+  com.example.androidximalayafm.adapters.RecommendListAdapter o-- com.example.androidximalayafm.adapters.RecommendListAdapter.OnRecommendItemClickListener : mItemClickListener
+  com.example.androidximalayafm.base.BaseApplication -up-|> android.app.Application
+  com.example.androidximalayafm.base.BaseFragment -up-|> androidx.fragment.app.Fragment
+  com.example.androidximalayafm.fragments.HistoryFragment -up-|> com.example.androidximalayafm.base.BaseFragment
+  com.example.androidximalayafm.fragments.RecommendFragment .up.|> com.example.androidximalayafm.adapters.RecommendListAdapter.OnRecommendItemClickListener
+  com.example.androidximalayafm.fragments.RecommendFragment .up.|> com.example.androidximalayafm.interfaces.IRecommendViewCallback
+  com.example.androidximalayafm.fragments.RecommendFragment .up.|> com.example.androidximalayafm.views.UILoader.OnRetryClickListener
+  com.example.androidximalayafm.fragments.RecommendFragment -up-|> com.example.androidximalayafm.base.BaseFragment
+  com.example.androidximalayafm.fragments.RecommendFragment o-- com.example.androidximalayafm.adapters.RecommendListAdapter : mRecommendListAdapter
+  com.example.androidximalayafm.fragments.RecommendFragment o-- com.example.androidximalayafm.presenters.RecommendPresenter : mRecommendPresenter
+  com.example.androidximalayafm.fragments.RecommendFragment o-- com.example.androidximalayafm.views.UILoader : mUiLoader
+  com.example.androidximalayafm.fragments.SubscriptionFragment -up-|> com.example.androidximalayafm.base.BaseFragment
+  com.example.androidximalayafm.presenters.AlbumDetailPresenter .up.|> com.example.androidximalayafm.interfaces.IAlbumDetailPresenter
+  com.example.androidximalayafm.presenters.PlayerPresenter .up.|> com.example.androidximalayafm.interfaces.IPlayerPresenter
+  com.example.androidximalayafm.presenters.PlayerPresenter .up.|> com.ximalaya.ting.android.opensdk.player.advertis.IXmAdsStatusListener
+  com.example.androidximalayafm.presenters.PlayerPresenter .up.|> com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener
+  com.example.androidximalayafm.presenters.RecommendPresenter .up.|> com.example.androidximalayafm.interfaces.IRecommendPresenter
+  com.example.androidximalayafm.views.LoadingView -up-|> androidx.appcompat.widget.AppCompatImageView
+  com.example.androidximalayafm.views.RoundRectImageView -up-|> androidx.appcompat.widget.AppCompatImageView
+  com.example.androidximalayafm.views.UILoader -up-|> android.widget.FrameLayout
+  com.example.androidximalayafm.views.UILoader o-- com.example.androidximalayafm.views.UILoader.UIStatue : mCurrentStatus
+  com.example.androidximalayafm.views.UILoader o-- com.example.androidximalayafm.views.UILoader.OnRetryClickListener : mOnRetrClickListener
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
