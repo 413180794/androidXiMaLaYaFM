@@ -82,20 +82,20 @@
             <ImageView
                 android:id="@+id/play_pre"
                 android:layout_width="0dp"
-                android:src="@mipmap/previous"
-                android:layout_height="20dp"
-                android:layout_weight="1" />
+                android:layout_height="15dp"
+                android:layout_weight="1"
+                android:src="@drawable/selector_player_pre" />
             <ImageView
                 android:id="@+id/play_or_pause_btn"
                 android:layout_width="0dp"
-                android:src="@mipmap/play"
+                android:src="@drawable/selector_player_play"
                 android:layout_height="35dp"
                 android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/play_next"
                 android:layout_width="0dp"
-                android:src="@mipmap/next"
+                android:src="@drawable/selector_player_next"
                 android:layout_height="20dp"
                 android:layout_weight="1" />
 

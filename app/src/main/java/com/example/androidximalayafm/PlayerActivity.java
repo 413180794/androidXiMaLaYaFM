@@ -157,12 +157,12 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
     @Override
     public void onPlayStart() {
         // 开始播放，修改 UI 成暂停的按钮
-        Optional.ofNullable(mControlBtn).ifPresent(i -> i.setImageResource(R.mipmap.stop));
+        Optional.ofNullable(mControlBtn).ifPresent(i -> i.setImageResource(R.drawable.selector_player_stop));
     }
 
     @Override
     public void onPlayPause() {
-        Optional.ofNullable(mControlBtn).ifPresent(i -> i.setImageResource(R.mipmap.play));
+        Optional.ofNullable(mControlBtn).ifPresent(i -> i.setImageResource(R.drawable.selector_player_play));
     }
 
     @Override
