@@ -1,6 +1,8 @@
 package com.example.androidximalayafm;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,7 +32,7 @@ import java.util.Optional;
  * <p>
  * Description:
  */
-public class PlayerActivity extends BaseActivity implements IPlayerCallback {
+public class PlayerActivity extends BaseActivity implements IPlayerCallback, ViewPager.OnPageChangeListener {
 
     private static final String TAG = "PlayerActivity";
     private SimpleDateFormat mMinFormat = new SimpleDateFormat("mm:ss", Locale.CHINA);
@@ -49,6 +51,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
     private TextView mTrackTitle;
     private ViewPager mTrackPageView;
     private PlayerTrackPagerAdapter mTrackPagerAdapter;
+    private boolean mIsUserSlidePager = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,18 +61,10 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
         mPlayerPresenter = PlayerPresenter.getInstance();
         initView();
         initEvent();
-        startPlay();
         Optional.ofNullable(mPlayerPresenter).ifPresent(i -> {
             i.registerViewCallback(this);
             i.getPlayList();
         });
-    }
-
-    /**
-     * 开始播放
-     */
-    private void startPlay() {
-        Optional.ofNullable(mPlayerPresenter).ifPresent(PlayerPresenter::play);
     }
 
     /**
@@ -116,6 +111,20 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
             // todo 播放后一个节目
             Optional.ofNullable(mPlayerPresenter).ifPresent(PlayerPresenter::playNext);
         }));
+        Optional.ofNullable(mTrackPageView).ifPresent(trackPageView -> {
+            trackPageView.addOnPageChangeListener(this);
+            trackPageView.setOnTouchListener((view, motionEvent) -> {
+                int action = motionEvent.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        LogUtil.d(TAG, "ACTION DOWN");
+                        mIsUserTouchProgressBar = true;
+                        break;
+                }
+                return false;
+
+            });
+        });
     }
 
     @Override
@@ -221,7 +230,32 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
     }
 
     @Override
-    public void onTrackUpdate(Track track) {
+    public void onTrackUpdate(Track track, int playIndex) {
+
         Optional.ofNullable(mTrackTitle).ifPresent(i -> i.setText(track.getTrackTitle()));
+        Optional.ofNullable(mTrackPageView).ifPresent(i -> i.setCurrentItem(playIndex, true));
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        LogUtil.d(TAG, "mIsUserTouchProgressBar = " + mIsUserTouchProgressBar);
+        // 当页面选中的时候，就去切换播放的内容
+        Optional.ofNullable(mPlayerPresenter).ifPresent(playerPresenter -> {
+            LogUtil.d(TAG, "mIsUserTouchProgressBar = " + mIsUserTouchProgressBar);
+            if (mIsUserTouchProgressBar) {
+                playerPresenter.playByIndex(position);
+            }
+            mIsUserTouchProgressBar = false;
+        });
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }
