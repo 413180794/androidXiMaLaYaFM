@@ -6,7 +6,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 
+import com.example.androidximalayafm.adapters.PlayerTrackPagerAdapter;
 import com.example.androidximalayafm.interfaces.IPlayerCallback;
 import com.example.androidximalayafm.presenters.PlayerPresenter;
 import com.example.androidximalayafm.utils.LogUtil;
@@ -45,6 +47,8 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
     private ImageView mPlayNext;
     private ImageView mPlayPre;
     private TextView mTrackTitle;
+    private ViewPager mTrackPageView;
+    private PlayerTrackPagerAdapter mTrackPagerAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +59,10 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
         initView();
         initEvent();
         startPlay();
-        Optional.ofNullable(mPlayerPresenter).ifPresent(i -> i.registerViewCallback(this));
+        Optional.ofNullable(mPlayerPresenter).ifPresent(i -> {
+            i.registerViewCallback(this);
+            i.getPlayList();
+        });
     }
 
     /**
@@ -131,6 +138,11 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
         mPlayNext = this.findViewById(R.id.play_next);
         mPlayPre = this.findViewById(R.id.play_pre);
         mTrackTitle = this.findViewById(R.id.track_title);
+        mTrackPageView = this.findViewById(R.id.track_pager_view);
+        // 创建适配器
+        mTrackPagerAdapter = new PlayerTrackPagerAdapter();
+        // 设置适配器
+        mTrackPageView.setAdapter(mTrackPagerAdapter);
     }
 
     @Override
@@ -166,7 +178,9 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
 
     @Override
     public void onListLoaded(List<Track> list) {
-
+//        LogUtil.d(TAG, "lsit " + list);
+        // 把数据设置到适配器中
+        Optional.ofNullable(mTrackPagerAdapter).ifPresent(i -> i.setData(list));
     }
 
     @Override
@@ -207,7 +221,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
     }
 
     @Override
-    public void onTrackTitleUpdate(String title) {
-        Optional.ofNullable(mTrackTitle).ifPresent(i -> i.setText(title));
+    public void onTrackUpdate(Track track) {
+        Optional.ofNullable(mTrackTitle).ifPresent(i -> i.setText(track.getTrackTitle()));
     }
 }
