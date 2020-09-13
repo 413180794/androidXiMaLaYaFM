@@ -44,6 +44,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
     private boolean mIsUserTouchProgressBar = false;
     private ImageView mPlayNext;
     private ImageView mPlayPre;
+    private TextView mTrackTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,10 +52,10 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
         setContentView(R.layout.activity_player);
         // TODO: 测试一下播放
         mPlayerPresenter = PlayerPresenter.getInstance();
-        Optional.ofNullable(mPlayerPresenter).ifPresent(i -> i.registerViewCallback(this));
         initView();
         initEvent();
         startPlay();
+        Optional.ofNullable(mPlayerPresenter).ifPresent(i -> i.registerViewCallback(this));
     }
 
     /**
@@ -129,6 +130,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
         mDurationBar = this.findViewById(R.id.track_seek_bar);
         mPlayNext = this.findViewById(R.id.play_next);
         mPlayPre = this.findViewById(R.id.play_pre);
+        mTrackTitle = this.findViewById(R.id.track_title);
     }
 
     @Override
@@ -202,5 +204,10 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
     @Override
     public void onAdFinished() {
 
+    }
+
+    @Override
+    public void onTrackTitleUpdate(String title) {
+        Optional.ofNullable(mTrackTitle).ifPresent(i -> i.setText(title));
     }
 }

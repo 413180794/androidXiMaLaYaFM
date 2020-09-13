@@ -35,6 +35,7 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     private List<IPlayerCallback> mIPlayerCallbacks = new ArrayList<>();
     private static final String TAG = "PlayerPresenter";
     private XmPlayerManager mXmPlayerManager;
+    private String mTrackTitle;
 
     private PlayerPresenter() {
         mXmPlayerManager = XmPlayerManager.getInstance(BaseApplication.getAppContext());
@@ -124,8 +125,21 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     }
 
     @Override
-    public void onSoundSwitch(PlayableModel playableModel, PlayableModel playableModel1) {
-
+    public void onSoundSwitch(PlayableModel lastModel, PlayableModel curModel) {
+        // 代表的是当前播放的内容， 如果通过 getKind 方法获取他是什么类型
+        // track 表示的是 track 类型
+        // 不推荐
+//        if ("track".equals(curModel.getKind())) {
+//            Track currentTrack = (Track) curModel;
+//            LogUtil.d(TAG, "title == > " + currentTrack.getTrackTitle());
+//        }
+        if (curModel instanceof Track) {
+            Track currentTack = (Track) curModel;
+            mTrackTitle = currentTack.getTrackTitle();
+            mIPlayerCallbacks.forEach(iPlayerCallback -> {
+                iPlayerCallback.onTrackTitleUpdate(mTrackTitle);
+            });
+        }
         LogUtil.d(TAG, "");
     }
 
@@ -173,6 +187,8 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
             i.setPlayList(list, playIndex);
             isPlayListSet = true;
         });
+        Track track = list.get(playIndex);
+        mTrackTitle = track.getTrackTitle();
         if (!Optional.ofNullable(mXmPlayerManager).isPresent()) {
             LogUtil.d(TAG, "mPlayerManager is null");
         }
@@ -238,6 +254,7 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
 
     @Override
     public void registerViewCallback(IPlayerCallback iPlayerCallback) {
+        iPlayerCallback.onTrackTitleUpdate(mTrackTitle);
         if (!mIPlayerCallbacks.contains(iPlayerCallback)) {
             mIPlayerCallbacks.add(iPlayerCallback);
         }
