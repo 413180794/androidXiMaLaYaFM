@@ -80,6 +80,7 @@
                 android:layout_weight="1" />
 
             <ImageView
+                android:id="@+id/play_pre"
                 android:layout_width="0dp"
                 android:src="@mipmap/previous"
                 android:layout_height="20dp"
@@ -92,6 +93,7 @@
                 android:layout_weight="1" />
 
             <ImageView
+                android:id="@+id/play_next"
                 android:layout_width="0dp"
                 android:src="@mipmap/next"
                 android:layout_height="20dp"

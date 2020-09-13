@@ -28,6 +28,7 @@ import java.util.Optional;
  * @since 1.0.0
  * <p>
  * Description:
+ * 可以看出来，presenter 层主要负责逻辑的处理，通过 UI 注册的回调，对 UI 层处理。
  */
 public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, IXmPlayerStatusListener {
 

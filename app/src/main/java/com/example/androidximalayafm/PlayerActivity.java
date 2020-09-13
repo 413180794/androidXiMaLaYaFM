@@ -42,6 +42,8 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
 
     private int mCurrentProgress = 0;
     private boolean mIsUserTouchProgressBar = false;
+    private ImageView mPlayNext;
+    private ImageView mPlayPre;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +99,15 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
                 mPlayerPresenter.seekTo(mCurrentProgress);
             }
         }));
+
+        Optional.ofNullable(mPlayPre).ifPresent(i -> i.setOnClickListener(v -> {
+            // todo 播放前一个节目
+            Optional.ofNullable(mPlayerPresenter).ifPresent(PlayerPresenter::playPre);
+        }));
+        Optional.ofNullable(mPlayNext).ifPresent(i -> i.setOnClickListener(v -> {
+            // todo 播放后一个节目
+            Optional.ofNullable(mPlayerPresenter).ifPresent(PlayerPresenter::playNext);
+        }));
     }
 
     @Override
@@ -116,6 +127,8 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
         mTotalDuration = this.findViewById(R.id.track_duration);
         mCurrentPosition = this.findViewById(R.id.current_position);
         mDurationBar = this.findViewById(R.id.track_seek_bar);
+        mPlayNext = this.findViewById(R.id.play_next);
+        mPlayPre = this.findViewById(R.id.play_pre);
     }
 
     @Override
@@ -162,7 +175,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback {
     @Override
     public void onProgressChange(int currentProgress, int totalProgress) {
         // 更新播放进度，更新进度条
-        Optional.ofNullable(mDurationBar).ifPresent(i->i.setMax(totalProgress));
+        Optional.ofNullable(mDurationBar).ifPresent(i -> i.setMax(totalProgress));
         String totalDuration;
         String currentPosition;
         if (totalProgress > 1000 * 60 * 60) {
