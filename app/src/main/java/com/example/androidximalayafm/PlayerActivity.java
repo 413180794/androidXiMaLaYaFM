@@ -145,8 +145,6 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
                 XmPlayListControl.PlayMode playMode = sPlayModeRule.get(mCurrentMode);
                 Optional.ofNullable(mPlayerPresenter).ifPresent(playerPresenter -> {
                     playerPresenter.switchPlayMode(playMode);
-                    mCurrentMode = playMode;
-                    updatePlayModeBtnImg();
                 });
             });
         });
@@ -154,10 +152,12 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
 
     /**
      * 根据当前的状态，更新播放模式的图标
+     *
+     * @param playMode
      */
-    private void updatePlayModeBtnImg() {
+    private void updatePlayModeBtnImg(XmPlayListControl.PlayMode playMode) {
         int resId = R.drawable.selector_player_mode_list_order;
-        switch (mCurrentMode) {
+        switch (playMode) {
             case PLAY_MODEL_LIST:
                 resId = R.drawable.selector_player_mode_list_order;
                 break;
@@ -243,7 +243,8 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
 
     @Override
     public void onPlayModeChange(XmPlayListControl.PlayMode playMode) {
-
+        updatePlayModeBtnImg(playMode);
+        mCurrentMode = playMode;
     }
 
     @Override

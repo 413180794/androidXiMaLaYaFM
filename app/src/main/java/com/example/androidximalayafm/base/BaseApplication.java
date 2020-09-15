@@ -36,7 +36,7 @@ public class BaseApplication extends Application {
         // 初始化播放器
         XmPlayerManager.getInstance(this).init();
 
-        sContext = new Application().getBaseContext();
+        sContext = getBaseContext();
 
         sHandler = new Handler();
     }
