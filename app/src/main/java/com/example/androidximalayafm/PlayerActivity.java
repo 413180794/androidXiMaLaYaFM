@@ -1,5 +1,6 @@
 package com.example.androidximalayafm;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,8 +19,10 @@ import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -52,6 +55,16 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
     private ViewPager mTrackPageView;
     private PlayerTrackPagerAdapter mTrackPagerAdapter;
     private boolean mIsUserSlidePager = false;
+    private ImageView mPlayModeSwitchBtn;
+    private XmPlayListControl.PlayMode mCurrentMode = XmPlayListControl.PlayMode.PLAY_MODEL_LIST;
+    private static Map<XmPlayListControl.PlayMode, XmPlayListControl.PlayMode> sPlayModeRule = new HashMap<>();
+
+    static {
+        sPlayModeRule.put(XmPlayListControl.PlayMode.PLAY_MODEL_LIST, XmPlayListControl.PlayMode.PLAY_MODEL_LIST_LOOP);
+        sPlayModeRule.put(XmPlayListControl.PlayMode.PLAY_MODEL_LIST_LOOP, XmPlayListControl.PlayMode.PLAY_MODEL_RANDOM);
+        sPlayModeRule.put(XmPlayListControl.PlayMode.PLAY_MODEL_RANDOM, XmPlayListControl.PlayMode.PLAY_MODEL_SINGLE_LOOP);
+        sPlayModeRule.put(XmPlayListControl.PlayMode.PLAY_MODEL_SINGLE_LOOP, XmPlayListControl.PlayMode.PLAY_MODEL_LIST);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +83,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
     /**
      * 给控件设置相关的事件
      */
+    @SuppressLint("ClickableViewAccessibility")
     private void initEvent() {
         Optional.ofNullable(mControlBtn).ifPresent(i -> i.setOnClickListener(v -> {
             // 如果现在的状态是正在播放的，那么久暂停
@@ -115,16 +129,50 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
             trackPageView.addOnPageChangeListener(this);
             trackPageView.setOnTouchListener((view, motionEvent) -> {
                 int action = motionEvent.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        LogUtil.d(TAG, "ACTION DOWN");
-                        mIsUserTouchProgressBar = true;
-                        break;
+                if (action == MotionEvent.ACTION_DOWN) {
+                    LogUtil.d(TAG, "ACTION DOWN");
+                    mIsUserTouchProgressBar = true;
                 }
                 return false;
 
             });
         });
+
+
+        Optional.ofNullable(mPlayModeSwitchBtn).ifPresent(playModeSwitch -> {
+            playModeSwitch.setOnClickListener(v -> {
+                // 根据当前的 mode 获取到下一个 mode / 注意这里使用一个 map 来实现了循环
+                XmPlayListControl.PlayMode playMode = sPlayModeRule.get(mCurrentMode);
+                Optional.ofNullable(mPlayerPresenter).ifPresent(playerPresenter -> {
+                    playerPresenter.switchPlayMode(playMode);
+                    mCurrentMode = playMode;
+                    updatePlayModeBtnImg();
+                });
+            });
+        });
+    }
+
+    /**
+     * 根据当前的状态，更新播放模式的图标
+     */
+    private void updatePlayModeBtnImg() {
+        int resId = R.drawable.selector_player_mode_list_order;
+        switch (mCurrentMode) {
+            case PLAY_MODEL_LIST:
+                resId = R.drawable.selector_player_mode_list_order;
+                break;
+            case PLAY_MODEL_RANDOM:
+                resId = R.drawable.selector_paly_mode_random;
+                break;
+            case PLAY_MODEL_LIST_LOOP:
+                resId = R.drawable.selector_player_mode_list_looper;
+                break;
+            case PLAY_MODEL_SINGLE:
+            case PLAY_MODEL_SINGLE_LOOP:
+                resId = R.drawable.selector_paly_mode_single_loop;
+                break;
+        }
+        mPlayModeSwitchBtn.setImageResource(resId);
     }
 
     @Override
@@ -152,6 +200,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
         mTrackPagerAdapter = new PlayerTrackPagerAdapter();
         // 设置适配器
         mTrackPageView.setAdapter(mTrackPagerAdapter);
+        mPlayModeSwitchBtn = this.findViewById(R.id.player_mode_switch_btn);
     }
 
     @Override
