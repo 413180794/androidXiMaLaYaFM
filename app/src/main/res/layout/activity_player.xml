@@ -101,8 +101,9 @@
                 android:layout_weight="1" />
 
             <ImageView
+                android:id="@+id/play_list"
                 android:layout_width="0dp"
-                android:src="@mipmap/player_icon_list_press"
+                android:src="@drawable/selector_player_list"
                 android:layout_height="20dp"
                 android:layout_weight="1" />
 

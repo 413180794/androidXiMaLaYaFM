@@ -2,8 +2,8 @@ package com.example.androidximalayafm;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -15,6 +15,7 @@ import com.example.androidximalayafm.adapters.PlayerTrackPagerAdapter;
 import com.example.androidximalayafm.interfaces.IPlayerCallback;
 import com.example.androidximalayafm.presenters.PlayerPresenter;
 import com.example.androidximalayafm.utils.LogUtil;
+import com.example.androidximalayafm.views.SobPopWindow;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
 
@@ -65,6 +66,9 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
         sPlayModeRule.put(XmPlayListControl.PlayMode.PLAY_MODEL_RANDOM, XmPlayListControl.PlayMode.PLAY_MODEL_SINGLE_LOOP);
         sPlayModeRule.put(XmPlayListControl.PlayMode.PLAY_MODEL_SINGLE_LOOP, XmPlayListControl.PlayMode.PLAY_MODEL_LIST);
     }
+
+    private ImageView mPlayListBtn;
+    private SobPopWindow mSobPopWindow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,7 +152,14 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
                 });
             });
         });
+        Optional.ofNullable(mPlayListBtn).ifPresent(playListBtn->{
+            playListBtn.setOnClickListener(v->{
+                // 展示播放列表
+                mSobPopWindow.showAsDropDown(v, Gravity.BOTTOM, 0, 0);
+            });
+        });
     }
+
 
     /**
      * 根据当前的状态，更新播放模式的图标
@@ -162,14 +173,14 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
                 resId = R.drawable.selector_player_mode_list_order;
                 break;
             case PLAY_MODEL_RANDOM:
-                resId = R.drawable.selector_paly_mode_random;
+                resId = R.drawable.selector_play_mode_random;
                 break;
             case PLAY_MODEL_LIST_LOOP:
                 resId = R.drawable.selector_player_mode_list_looper;
                 break;
             case PLAY_MODEL_SINGLE:
             case PLAY_MODEL_SINGLE_LOOP:
-                resId = R.drawable.selector_paly_mode_single_loop;
+                resId = R.drawable.selector_play_mode_single_loop;
                 break;
         }
         mPlayModeSwitchBtn.setImageResource(resId);
@@ -196,11 +207,15 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
         mPlayPre = this.findViewById(R.id.play_pre);
         mTrackTitle = this.findViewById(R.id.track_title);
         mTrackPageView = this.findViewById(R.id.track_pager_view);
+        mPlayListBtn = this.findViewById(R.id.play_list);
         // 创建适配器
         mTrackPagerAdapter = new PlayerTrackPagerAdapter();
         // 设置适配器
         mTrackPageView.setAdapter(mTrackPagerAdapter);
         mPlayModeSwitchBtn = this.findViewById(R.id.player_mode_switch_btn);
+
+
+        mSobPopWindow = new SobPopWindow();
     }
 
     @Override

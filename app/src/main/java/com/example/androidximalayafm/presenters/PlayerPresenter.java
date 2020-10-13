@@ -36,14 +36,14 @@ import static com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl
  * 可以看出来，presenter 层主要负责逻辑的处理，通过 UI 注册的回调，对 UI 层处理。
  */
 public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, IXmPlayerStatusListener {
-
+    private final static String PLAY_MODE_SP_KEY = "PlayMode";
     private List<IPlayerCallback> mIPlayerCallbacks = new ArrayList<>();
     private static final String TAG = "PlayerPresenter";
     private XmPlayerManager mXmPlayerManager;
     private Track mCurrentTrack;
     private int mCurrentIndex = 0;
     private final SharedPreferences mPlayModeSp;
-
+    private XmPlayListControl.PlayMode mCurrentPlayMode = PLAY_MODEL_LIST;
 
     private PlayerPresenter() {
         mXmPlayerManager = XmPlayerManager.getInstance(BaseApplication.getAppContext());
@@ -55,7 +55,7 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
 
         });
         // 需要记录当前的播放模式
-        mPlayModeSp = BaseApplication.getAppContext().getSharedPreferences("PlayMode", Context.MODE_PRIVATE);
+        mPlayModeSp = BaseApplication.getAppContext().getSharedPreferences(PLAY_MODE_SP_KEY, Context.MODE_PRIVATE);
         LogUtil.d(TAG, mPlayModeSp + "");
 
     }
@@ -135,7 +135,8 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     @Override
     public void onSoundPrepared() {
 
-        LogUtil.d(TAG, "");
+        LogUtil.d(TAG, "onSoundPrepared");
+        mXmPlayerManager.setPlayMode(mCurrentPlayMode);
         if (mXmPlayerManager.getPlayerStatus() == PlayerConstants.STATE_STARTED) {
             // 播放器准备完成，可以播放
             mXmPlayerManager.play();
@@ -247,13 +248,15 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     @Override
     public void switchPlayMode(XmPlayListControl.PlayMode mode) {
         Optional.ofNullable(mXmPlayerManager).ifPresent(xmPlayerManager -> {
+            mCurrentPlayMode = mode;
             xmPlayerManager.setPlayMode(mode);
             mIPlayerCallbacks.forEach(iPlayerCallback -> {
                 iPlayerCallback.onPlayModeChange(mode);
             });
         });
         SharedPreferences.Editor editor = mPlayModeSp.edit();
-        editor.putInt("PlayMode", mode.ordinal());
+
+        editor.putInt(PLAY_MODE_SP_KEY, mode.ordinal());
         editor.apply();
     }
 
@@ -288,7 +291,8 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     @Override
     public void registerViewCallback(IPlayerCallback iPlayerCallback) {
         iPlayerCallback.onTrackUpdate(mCurrentTrack, mCurrentIndex);
-        iPlayerCallback.onPlayModeChange(XmPlayListControl.PlayMode.getIndex(mPlayModeSp.getInt("PlayMode", PLAY_MODEL_LIST.ordinal())));
+        mCurrentPlayMode = XmPlayListControl.PlayMode.getIndex(mPlayModeSp.getInt(PLAY_MODE_SP_KEY, PLAY_MODEL_LIST.ordinal()));
+        iPlayerCallback.onPlayModeChange(mCurrentPlayMode);
         if (!mIPlayerCallbacks.contains(iPlayerCallback)) {
             mIPlayerCallbacks.add(iPlayerCallback);
         }
