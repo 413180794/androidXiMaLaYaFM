@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -69,6 +70,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
 
     private ImageView mPlayListBtn;
     private SobPopWindow mSobPopWindow;
+    private View mPlayListBtn1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -170,7 +172,6 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
         int resId = R.drawable.selector_player_mode_list_order;
         switch (playMode) {
             case PLAY_MODEL_LIST:
-                resId = R.drawable.selector_player_mode_list_order;
                 break;
             case PLAY_MODEL_RANDOM:
                 resId = R.drawable.selector_play_mode_random;
@@ -207,13 +208,13 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
         mPlayPre = this.findViewById(R.id.play_pre);
         mTrackTitle = this.findViewById(R.id.track_title);
         mTrackPageView = this.findViewById(R.id.track_pager_view);
+        // 播放列表
         mPlayListBtn = this.findViewById(R.id.play_list);
         // 创建适配器
         mTrackPagerAdapter = new PlayerTrackPagerAdapter();
         // 设置适配器
         mTrackPageView.setAdapter(mTrackPagerAdapter);
         mPlayModeSwitchBtn = this.findViewById(R.id.player_mode_switch_btn);
-
 
         mSobPopWindow = new SobPopWindow();
     }
