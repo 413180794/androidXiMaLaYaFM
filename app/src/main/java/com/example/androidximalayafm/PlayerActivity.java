@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -157,9 +160,22 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
         Optional.ofNullable(mPlayListBtn).ifPresent(playListBtn->{
             playListBtn.setOnClickListener(v->{
                 // 展示播放列表
-                mSobPopWindow.showAsDropDown(v, Gravity.BOTTOM, 0, 0);
+                mSobPopWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
+                // 处理一下背景，有点透明度
+                updateBgAlpha(0.8f);
             });
         });
+        mSobPopWindow.setOnDismissListener(() -> {
+            // pop 窗体消失以后，恢复透明度
+            updateBgAlpha(1.0f);
+        });
+    }
+
+    public void updateBgAlpha(float alpha) {
+        Window window = getWindow();
+        WindowManager.LayoutParams attributes = window.getAttributes();
+        attributes.alpha = alpha;
+        window.setAttributes(attributes);
     }
 
 
