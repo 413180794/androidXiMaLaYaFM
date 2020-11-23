@@ -1,5 +1,6 @@
 package com.example.androidximalayafm;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -73,6 +74,8 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
     private ImageView mPlayListBtn;
     private SobPopWindow mSobPopWindow;
     private View mPlayListBtn1;
+    private ValueAnimator mEnterBgAnimator;
+    private ValueAnimator mOutBgAnimator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,9 +85,26 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
         mPlayerPresenter = PlayerPresenter.getInstance();
         initView();
         initEvent();
+        initBgAnimation();
         Optional.ofNullable(mPlayerPresenter).ifPresent(i -> {
             i.registerViewCallback(this);
             i.getPlayList();
+        });
+    }
+
+    private void initBgAnimation() {
+        mEnterBgAnimator = ValueAnimator.ofFloat(1.0f, 0.7f);
+        mEnterBgAnimator.setDuration(300);
+        mEnterBgAnimator.addUpdateListener(animation -> {
+           float value = (float) animation.getAnimatedValue();
+           updateBgAlpha(value);
+        });
+
+        mOutBgAnimator = ValueAnimator.ofFloat(0.7f, 1.0f);
+        mOutBgAnimator.setDuration(300);
+        mOutBgAnimator.addUpdateListener(animation -> {
+            float value = (float) animation.getAnimatedValue();
+            updateBgAlpha(value);
         });
     }
 
@@ -161,12 +181,13 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
                 // 展示播放列表
                 mSobPopWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
                 // 处理一下背景，有点透明度
-                updateBgAlpha(0.8f);
+                mEnterBgAnimator.start();
+                // 修改背景的透明度有一个渐变的过程
             });
         });
         mSobPopWindow.setOnDismissListener(() -> {
             // pop 窗体消失以后，恢复透明度
-            updateBgAlpha(1.0f);
+            mOutBgAnimator.start();
         });
     }
 
